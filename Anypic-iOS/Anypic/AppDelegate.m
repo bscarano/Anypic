@@ -37,6 +37,7 @@
 - (void)setupAppearance;
 - (BOOL)shouldProceedToMainInterface:(PFUser *)user;
 - (BOOL)handleActionURL:(NSURL *)url;
+- (void)loadHomeViewController;
 @end
 
 @implementation AppDelegate
@@ -262,6 +263,11 @@
             }
 
             if (!error) {
+                if([anypicFriends count] == 0) {
+                    [self loadHomeViewController];
+                    return;
+                }
+                
                 [MBProgressHUD hideHUDForView:self.navController.presentedViewController.view animated:NO];
                 self.hud = [MBProgressHUD showHUDAddedTo:self.homeViewController.view animated:NO];
                 [self.hud setDimBackground:YES];
@@ -515,10 +521,14 @@
     }
 }
 
-- (void)autoFollowTimerFired:(NSTimer *)aTimer {
+- (void)loadHomeViewController {
     [MBProgressHUD hideHUDForView:self.navController.presentedViewController.view animated:YES];
     [MBProgressHUD hideHUDForView:self.homeViewController.view animated:YES];
     [self.homeViewController loadObjects];
+}
+
+- (void)autoFollowTimerFired:(NSTimer *)aTimer {
+    [self loadHomeViewController];
 }
 
 - (BOOL)shouldProceedToMainInterface:(PFUser *)user {
